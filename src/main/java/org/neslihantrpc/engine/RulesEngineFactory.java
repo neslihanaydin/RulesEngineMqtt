@@ -12,6 +12,13 @@ public class RulesEngineFactory {
     private final Logger logger = LoggerFactory.getLogger(RulesEngineFactory.class);
     private final KieBase kieBase;
 
+    /**
+     * Constructs a RulesEngineFactory by loading the rules from a specified file path.
+     * It initializes the KieBase by reading the provided rules file.
+     *
+     * @param ruleFilePath the path to the rules file to be loaded
+     * @throws RuntimeException if the rule file is invalid or cannot be loaded
+     */
     public RulesEngineFactory(String ruleFilePath) {
         try {
             File file = new File(ruleFilePath);
@@ -29,6 +36,13 @@ public class RulesEngineFactory {
         }
     }
 
+    /**
+     * Creates and returns a new instance of the RulesEngine.
+     * This method initializes a new KieSession using the previously configured KieBase.
+     *
+     * @return a new RulesEngine instance
+     * @throws RuntimeException if there is an error creating the RulesEngine
+     */
     public RulesEngine create() {
         try {
             logger.info("Creating a new RulesEngine instance.");

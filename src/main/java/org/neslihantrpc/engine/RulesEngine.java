@@ -14,6 +14,14 @@ public class RulesEngine {
         this.kieSession = kieSession;
     }
 
+    /**
+     * Processes the given input object to determine Winter Supplement eligibility and calculates the corresponding output.
+     *
+     * @param person a {@link WinterSupplementEligibilityInput} object containing input data for the rules engine.
+     * @return a {@link WinterSupplementEligibilityOutput} object with calculated eligibility and supplement details.
+     * Returns null if no valid output is generated.
+     * @throws NullPointerException if an error occurs while processing rules.
+     */
     public WinterSupplementEligibilityOutput process(WinterSupplementEligibilityInput person) {
 
         try {

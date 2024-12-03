@@ -19,6 +19,11 @@ public class MqttConfig {
         setEnvironment(ConfigType.PROD);
     }
 
+    /**
+     * Sets the environment configuration by loading the corresponding properties file.
+     *
+     * @param configType the environment type (e.g., PROD or TEST)
+     */
     public void setEnvironment(ConfigType configType) {
         if (configType == ConfigType.PROD) {
             loadProperties(PROD_PROPERTIES_FILE_PATH);
@@ -26,6 +31,12 @@ public class MqttConfig {
             loadProperties(TEST_PROPERTIES_FILE_PATH);
         }
     }
+
+    /**
+     * Loads the properties from the specified file path.
+     *
+     * @param propertiesFilePath the path to the properties file (e.g., "/prod.properties")
+     */
     private void loadProperties(String propertiesFilePath) {
         try (InputStream inputStream = MqttConfig.class.getResourceAsStream(propertiesFilePath)) {
             if (inputStream != null) {
@@ -39,6 +50,12 @@ public class MqttConfig {
         }
     }
 
+    /**
+     * Retrieves the value of a property by its key.
+     *
+     * @param key the key of the property (e.g., "mqtt.broker")
+     * @return the value associated with the property key, or null if not found
+     */
     private String getProperty(String key) {
         return properties.getProperty(key);
     }

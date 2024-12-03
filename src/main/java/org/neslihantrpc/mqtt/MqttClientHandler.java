@@ -30,7 +30,11 @@ public class MqttClientHandler implements AutoCloseable{
         this.outputTopic = MqttConfig.current.getOutputTopic();
         this.factory = factory;
     }
-
+    /**
+     * Starts the MQTT client, connecting to the broker and subscribing to the input topic.
+     *
+     * @throws MqttException if an error occurs while connecting to the broker or subscribing.
+     */
     public void start() throws MqttException {
         mqttClient = new MqttClient(broker, clientId, new MemoryPersistence());
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
@@ -53,6 +57,13 @@ public class MqttClientHandler implements AutoCloseable{
         return mqttClient;
     }
 
+    /**
+     * Processes the received MQTT message, uses the {@link RulesEngine} to process the input,
+     * and publishes the result to the output topic.
+     *
+     * @param topic The MQTT topic.
+     * @param message The received MQTT message.
+     */
     private void processMessage(String topic, MqttMessage message) {
         executorService.submit(() -> {
             try {
@@ -79,6 +90,9 @@ public class MqttClientHandler implements AutoCloseable{
         });
     }
 
+    /**
+     * Stops the MQTT client and shuts down the executor service.
+     */
     public void stop() {
         executorService.shutdown();
         if (mqttClient != null) {
@@ -95,6 +109,11 @@ public class MqttClientHandler implements AutoCloseable{
         }
     }
 
+    /**
+     * Closes the MQTT client handler by stopping the client and releasing resources.
+     *
+     * @throws MqttException if an error occurs while closing the client.
+     */
     @Override
     public void close() throws MqttException {
         stop();
