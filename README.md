@@ -67,7 +67,7 @@ mvn clean install
 
 The tests are divided into test and production tests. Therefore, before running the tests, Mosquitto must be running locally. You can start it by typing `mosquitto` in the terminal.
 
-To ensure that the application works as expected, we have written comprehensive unit tests. The tests cover various components, including the MQTT client and the rules engine.
+To ensure that the application works as expected, comprehensive unit tests were written. The tests cover various components, including the MQTT client and the rules engine.
 
 ### Prerequisites:
 * Mosquitto Broker: Ensure that Mosquitto is installed and running locally. Start it with the following command:
