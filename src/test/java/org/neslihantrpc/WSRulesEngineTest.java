@@ -51,7 +51,7 @@ public class WSRulesEngineTest {
 
         assertNotNull(output);
         assertTrue(output.getEligible());
-        assertEquals(990F + 20F * input.getNumberOfChildren(), output.getSupplementAmount());
+        assertEquals(120F + 20F * input.getNumberOfChildren(), output.getSupplementAmount());
         assertEquals(input.getId(), output.getId());
     }
 
@@ -62,7 +62,7 @@ public class WSRulesEngineTest {
 
         assertNotNull(output);
         assertTrue(output.getEligible());
-        assertEquals(990F + 20F * input.getNumberOfChildren(), output.getSupplementAmount());
+        assertEquals(120F + 20F * input.getNumberOfChildren(), output.getSupplementAmount());
         assertEquals(input.getId(), output.getId());
     }
     @Test

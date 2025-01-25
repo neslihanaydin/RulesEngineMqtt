@@ -24,6 +24,6 @@ then
     output.setId($input.getId());
     output.setEligible($input.getFamilyUnitInPayForDecember());
     output.setChildrenAmount($input.getNumberOfChildren());
-    output.setBaseAmount(990F);
+    output.setBaseAmount(120F);
     insert(output);
 end
