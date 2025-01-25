@@ -4,18 +4,6 @@ import org.neslihantrpc.model.WinterSupplementEligibilityInput;
 import org.neslihantrpc.model.WinterSupplementEligibilityOutput;
 import org.neslihantrpc.enums.FamilyComposition;
 
-rule "Single Person With No Dependent Children"
-when
-    $input : WinterSupplementEligibilityInput(numberOfChildren == 0 , familyComposition == FamilyComposition.SINGLE ,familyUnitInPayForDecember == true)
-then
-    WinterSupplementEligibilityOutput output = new WinterSupplementEligibilityOutput();
-    output.setId($input.getId());
-    output.setEligible($input.getFamilyUnitInPayForDecember());
-    output.setChildrenAmount($input.getNumberOfChildren());
-    output.setBaseAmount(60F);
-    insert(output);
-end
-
 rule "Childless Couple"
 when
     $input : WinterSupplementEligibilityInput(numberOfChildren == 0 , familyComposition == FamilyComposition.MARRIED ,familyUnitInPayForDecember == true)
@@ -36,18 +24,6 @@ then
     output.setId($input.getId());
     output.setEligible($input.getFamilyUnitInPayForDecember());
     output.setChildrenAmount($input.getNumberOfChildren());
-    output.setBaseAmount(120F);
-    insert(output);
-end
-
-rule "Not Eligible"
-when
-    $input : WinterSupplementEligibilityInput(familyUnitInPayForDecember == false)
-then
-    WinterSupplementEligibilityOutput output = new WinterSupplementEligibilityOutput();
-    output.setId($input.getId());
-    output.setEligible($input.getFamilyUnitInPayForDecember());
-    output.setChildrenAmount($input.getNumberOfChildren());
-    output.setBaseAmount(0F);
+    output.setBaseAmount(990F);
     insert(output);
 end
