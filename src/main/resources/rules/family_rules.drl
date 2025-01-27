@@ -1,0 +1,20 @@
+package rules;
+
+import org.neslihantrpc.model.WinterSupplementEligibilityInput;
+import org.neslihantrpc.model.WinterSupplementEligibilityOutput;
+import org.neslihantrpc.enums.FamilyComposition;
+import org.neslihantrpc.util.WinterSupplementRuleUtils;
+
+rule "Childless Couple"
+when
+    $input : WinterSupplementEligibilityInput(numberOfChildren == 0 , familyComposition == FamilyComposition.MARRIED ,familyUnitInPayForDecember == true)
+then
+    insert(WinterSupplementRuleUtils.createEligibilityOutput($input));
+end
+
+rule "Either Single Or Two Parent Family With Dependent Children"
+when
+    $input : WinterSupplementEligibilityInput(numberOfChildren != 0 ,familyUnitInPayForDecember == true)
+then
+    insert(WinterSupplementRuleUtils.createEligibilityOutput($input));
+end
