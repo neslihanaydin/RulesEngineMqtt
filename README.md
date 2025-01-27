@@ -33,7 +33,7 @@ mqtt.broker=tcp://localhost:1883
 mqtt.topic.id=test-topic-id
 mqtt.input.topic=input-topic/
 mqtt.output.topic=output-topic/
-rules.file.path=src/main/resources/rules/eligibility.drl
+rules.file.path=src/main/resources/rules/
 ```
 For example, replace `test-topic-id` with the appropriate MQTT topic ID for your local setup.
 
@@ -176,7 +176,7 @@ Example Output:
 This project uses Drools to define and manage business rules. All rule definitions are located in the `src/main/resources/rules` directory.
 
 ### To add a new rule:
-1. Open the `eligibility.drl` file in the `rules` directory.
+1. Edit the existing rules files or create a new `.drl` file in the `rules` directory.
 2. Add your new rule following the Drools syntax.
 3. Save the file, and the changes will be automatically applied when the rules engine is executed.
 For more information on Drools syntax and usage, refer to the [Drools Documentation](https://www.drools.org/).
