@@ -2,15 +2,11 @@ package rules;
 
 import org.neslihantrpc.model.WinterSupplementEligibilityInput;
 import org.neslihantrpc.model.WinterSupplementEligibilityOutput;
+import org.neslihantrpc.util.WinterSupplementRuleUtils;
 
 rule "Not Eligible"
 when
     $input : WinterSupplementEligibilityInput(familyUnitInPayForDecember == false)
 then
-    WinterSupplementEligibilityOutput output = new WinterSupplementEligibilityOutput();
-    output.setId($input.getId());
-    output.setEligible($input.getFamilyUnitInPayForDecember());
-    output.setChildrenAmount($input.getNumberOfChildren());
-    output.setBaseAmount(0F);
-    insert(output);
+    insert(WinterSupplementRuleUtils.createEligibilityOutput($input));
 end
