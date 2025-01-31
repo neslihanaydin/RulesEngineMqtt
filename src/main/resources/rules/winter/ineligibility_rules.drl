@@ -1,0 +1,13 @@
+package rules.winter;
+
+import org.neslihantrpc.model.WinterSupplementEligibilityInput;
+import org.neslihantrpc.model.SupplementEligibilityOutput;
+import org.neslihantrpc.util.SupplementRuleUtils;
+import org.neslihantrpc.enums.Supplement;
+
+rule "Family Unit In Pay is Not Eligible - Winter"
+    when
+        $input : WinterSupplementEligibilityInput(familyUnitInPayForDecember == false)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.WINTER));
+end

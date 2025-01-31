@@ -1,0 +1,36 @@
+package rules.summer;
+
+import org.neslihantrpc.model.SummerSupplementEligibilityInput;
+import org.neslihantrpc.model.SupplementEligibilityOutput;
+import org.neslihantrpc.util.SupplementRuleUtils;
+import org.neslihantrpc.enums.Supplement;
+import org.neslihantrpc.enums.FamilyComposition;
+
+
+rule "Family Unit in Pay is Not Eligible - Summer"
+    when
+        $input : SummerSupplementEligibilityInput(familyUnitInPayForJuly == false)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.SUMMER));
+end
+
+rule "Single Person With No Dependent Children WITH a Household Income is Not Eligible - Summer"
+    when
+        $input : SummerSupplementEligibilityInput(numberOfChildren == 0, familyComposition == FamilyComposition.SINGLE, householdIncome > 50000)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.SUMMER));
+end
+
+rule "Childless Couple WITH a Household Income is Not Eligible - Summer"
+    when
+        $input : SummerSupplementEligibilityInput(numberOfChildren == 0 , familyComposition == FamilyComposition.MARRIED, householdIncome > 80000)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.SUMMER));
+end
+
+rule "Either Single Or Two Parent Family With Dependent Children WITH a Household Income is Not Eligible - Summer"
+    when
+        $input : SummerSupplementEligibilityInput(numberOfChildren > 0 , householdIncome > 90000)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.SUMMER));
+end

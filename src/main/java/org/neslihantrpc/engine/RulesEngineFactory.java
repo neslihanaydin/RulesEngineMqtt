@@ -5,21 +5,22 @@ import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.runtime.KieContainer;
 import org.kie.internal.io.ResourceFactory;
+import org.neslihantrpc.enums.Supplement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RulesEngineFactory {
     private final Logger logger = LoggerFactory.getLogger(RulesEngineFactory.class);
-    private final KieContainer kieContainer;
+    private final KieContainer winterKieContainer;
+    private final KieContainer summerKieContainer;
 
-    /**
-     * Constructs a RulesEngineFactory by loading the rules from a specified file path.
-     * It initializes the KieBase by reading the provided rules file.
-     *
-     * @param ruleFilePath the path to the rules file to be loaded
-     * @throws RuntimeException if the rule file is invalid or cannot be loaded
-     */
+
     public RulesEngineFactory(String ruleFilePath) {
+        this.winterKieContainer = buildKieContainer(ruleFilePath + "winter/");
+        this.summerKieContainer = buildKieContainer(ruleFilePath + "summer/");
+    }
+
+    private KieContainer buildKieContainer(String ruleFilePath) {
         try {
             KieServices kieServices = KieServices.Factory.get();
             KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
@@ -31,24 +32,22 @@ public class RulesEngineFactory {
             KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
             kieBuilder.buildAll();
 
-            kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
+            return kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
         } catch (Exception e) {
             logger.error("Failed to build KieBase from rules file at path: {}, Error: {}", ruleFilePath, e.getMessage());
             throw new RuntimeException("Error building KieBase from rules file: " + e.getMessage());
         }
     }
 
-    /**
-     * Creates and returns a new instance of the RulesEngine.
-     * This method initializes a new KieSession using the previously configured KieBase.
-     *
-     * @return a new RulesEngine instance
-     * @throws RuntimeException if there is an error creating the RulesEngine
-     */
-    public RulesEngine create() {
+    public RulesEngine create(Supplement supplement) {
         try {
-            logger.info("Creating a new RulesEngine instance.");
-            return new RulesEngine(kieContainer.newKieSession());
+            if (supplement == Supplement.WINTER) {
+                return new WinterRulesEngine(winterKieContainer);
+            } else if (supplement == Supplement.SUMMER) {
+                return new SummerRulesEngine(summerKieContainer);
+            } else {
+                throw new IllegalArgumentException("Unknown supplement type: " + supplement);
+            }
         } catch (Exception e) {
             logger.error("Error creating RulesEngine: {}", e.getMessage());
             throw new RuntimeException("Error creating RulesEngine: " + e.getMessage());

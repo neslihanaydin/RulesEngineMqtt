@@ -1,0 +1,14 @@
+package rules.winter;
+
+import org.neslihantrpc.model.WinterSupplementEligibilityInput;
+import org.neslihantrpc.model.SupplementEligibilityOutput;
+import org.neslihantrpc.enums.FamilyComposition;
+import org.neslihantrpc.util.SupplementRuleUtils;
+import org.neslihantrpc.enums.Supplement;
+
+rule "Single Person With No Dependent Children - Winter"
+    when
+        $input : WinterSupplementEligibilityInput(numberOfChildren == 0 , familyComposition == FamilyComposition.SINGLE ,familyUnitInPayForDecember == true)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.WINTER));
+end

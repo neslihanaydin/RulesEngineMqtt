@@ -1,14 +1,18 @@
 package org.neslihantrpc.mqtt;
 
+//import com.fasterxml.jackson.databind.JsonNode;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.neslihantrpc.engine.RulesEngine;
 import org.neslihantrpc.engine.RulesEngineFactory;
+import org.neslihantrpc.enums.Supplement;
+import org.neslihantrpc.model.SupplementEligibilityInput;
+import org.neslihantrpc.model.SupplementEligibilityOutput;
 import org.neslihantrpc.model.WinterSupplementEligibilityInput;
-import org.neslihantrpc.model.WinterSupplementEligibilityOutput;
 import org.neslihantrpc.util.JsonHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,11 +77,14 @@ public class MqttClientHandler implements AutoCloseable{
                     logger.info("Reconnected successfully.");
                 }
                 String payload = new String(message.getPayload());
+                SupplementEligibilityInput inputTest = JsonHandler.fromJson(payload, SupplementEligibilityInput.class);
+               // logger.info("Processing SupplementEligibilityInput input" + inputTest.toString());
+               // logger.info(inputTest.getId() + inputTest.getFamilyComposition().toString() + inputTest.getNumberOfChildren());
                 WinterSupplementEligibilityInput input = JsonHandler.fromJson(payload, WinterSupplementEligibilityInput.class);
-                logger.info("Processing input");
-
-                RulesEngine rulesEngine = factory.create();
-                WinterSupplementEligibilityOutput output = rulesEngine.process(input);
+               // logger.info("Processing input" + input.toString());
+               // logger.info(input.getId() + input.getFamilyComposition().toString() + input.getNumberOfChildren() + input.getFamilyUnitInPayForDecember());
+                RulesEngine rulesEngine = factory.create(Supplement.WINTER);
+                SupplementEligibilityOutput output = rulesEngine.process(input);
 
                 if (output != null) {
                     mqttClient.publish(outputTopic, output.getJson());

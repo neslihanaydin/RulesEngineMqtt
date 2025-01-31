@@ -9,13 +9,15 @@ import org.slf4j.LoggerFactory;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+   // private static final Supplement supplementType = Supplement.SUMMER;
 
     public static void main(String[] args) {
         RulesEngineFactory rulesEngineFactory = new RulesEngineFactory(MqttConfig.current.getRulesFilePath());
         MqttClientHandler mqttClientHandler = new MqttClientHandler(rulesEngineFactory);
         try {
+         //   logger.info("1 - Application started successfully for Supplement." + supplementType);
             mqttClientHandler.start();
-            logger.info("Application started successfully.");
+          //  logger.info("2 - Application started successfully for Supplement type of ." +  supplementType);
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 mqttClientHandler.stop();
