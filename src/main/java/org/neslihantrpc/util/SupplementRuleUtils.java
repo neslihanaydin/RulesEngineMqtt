@@ -9,12 +9,20 @@ import org.neslihantrpc.model.WinterSupplementEligibilityInput;
 public class SupplementRuleUtils {
 
     public static SupplementEligibilityOutput createEligibilityOutput(WinterSupplementEligibilityInput input, Supplement supplementType) {
+        System.out.println("Processing winter rules in SupplementRuleUtils");
         if (input == null || supplementType == null) {
             throw new IllegalArgumentException("Input or supplementType cannot be null");
         }
 
-        float childrenAmount = ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), input.getFamilyUnitInPayForDecember(), supplementType);
-        float baseAmount = BaseAmountCalculator.calculate(input, supplementType);
+        float childrenAmount;
+        float baseAmount;
+        if (input.getFamilyUnitInPayForDecember()) {
+            childrenAmount = ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), input.getFamilyUnitInPayForDecember(), supplementType);
+            baseAmount = BaseAmountCalculator.calculate(input, supplementType);
+        } else {
+            childrenAmount = 0;
+            baseAmount = 0;
+        }
 
         return new SupplementEligibilityOutput(
                 input.getId(),
@@ -25,12 +33,20 @@ public class SupplementRuleUtils {
     }
 
     public static SupplementEligibilityOutput createEligibilityOutput(SummerSupplementEligibilityInput input, Supplement supplementType) {
+        System.out.println("Processing summer rules in SupplementRuleUtils");
         if (input == null || supplementType == null) {
             throw new IllegalArgumentException("Input or supplementType cannot be null");
         }
 
-        float childrenAmount = ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), input.getFamilyUnitInPayForJuly(), supplementType);
-        float baseAmount = BaseAmountCalculator.calculate(input, supplementType);
+        float childrenAmount;
+        float baseAmount;
+        if (input.getFamilyUnitInPayForJuly()) {
+            childrenAmount = ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), input.getFamilyUnitInPayForJuly(), supplementType);
+            baseAmount = BaseAmountCalculator.calculate(input, supplementType);
+        } else {
+            childrenAmount = 0;
+            baseAmount = 0;
+        }
 
         return new SupplementEligibilityOutput(
                 input.getId(),

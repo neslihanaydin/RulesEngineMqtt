@@ -68,15 +68,27 @@ public class MqttConfig {
         return getProperty("mqtt.topic.id");
     }
 
-    public String getInputTopic() {
-        return getProperty("mqtt.input.topic") + getTopicId();
+    public String getWinterInputTopic() {
+        return getProperty("mqtt.winter.input.topic") + getTopicId();
     }
 
-    public String getOutputTopic() {
-        return getProperty("mqtt.output.topic") + getTopicId();
+    public String getWinterOutputTopic() {
+        return getProperty("mqtt.winter.output.topic") + getTopicId();
+    }
+
+    public String getSummerInputTopic() {
+        return getProperty("mqtt.summer.input.topic") + getTopicId();
+    }
+
+    public String getSummerOutputTopic() {
+        return getProperty("mqtt.summer.output.topic") + getTopicId();
     }
 
     public String getRulesFilePath() {
         return getProperty("rules.file.path");
+    }
+
+    public String getAppType() {
+        return getProperty("app.type");
     }
 }

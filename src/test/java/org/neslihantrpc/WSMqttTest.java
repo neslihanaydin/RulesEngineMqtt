@@ -48,9 +48,9 @@ class WSMqttTest {
             mqttClientHandler.start();
             MqttClient mqttClient = mqttClientHandler.getMqttClient();
             WinterSupplementEligibilityInput input = new WinterSupplementEligibilityInput("a0c5365f", 2, FamilyComposition.SINGLE, true);
-            mqttClient.publish(MqttConfig.current.getInputTopic(), input.getJson());
+            mqttClient.publish(MqttConfig.current.getWinterInputTopic(), input.getJson());
 
-            mqttClient.subscribe(MqttConfig.current.getOutputTopic(), 1, new IMqttMessageListener() {
+            mqttClient.subscribe(MqttConfig.current.getWinterOutputTopic(), 1, new IMqttMessageListener() {
                 @Override
                 public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                     assertEquals(mqttMessage, input.getJson());
