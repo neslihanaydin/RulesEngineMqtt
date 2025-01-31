@@ -14,9 +14,16 @@ rule "Childless Couple - Winter"
         insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.WINTER));
 end
 
-rule "Either Single Or Two Parent Family With Dependent Children - Winter"
+rule "Two Parent Family With Dependent Children - Winter"
     when
-        $input : WinterSupplementEligibilityInput(numberOfChildren > 0 ,familyUnitInPayForDecember == true)
+        $input : WinterSupplementEligibilityInput(numberOfChildren > 0 , familyComposition == FamilyComposition.MARRIED, familyUnitInPayForDecember == true)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.WINTER));
+end
+
+rule "Single Parent Family With Dependent Children - Winter"
+    when
+        $input : WinterSupplementEligibilityInput(numberOfChildren > 0 , familyComposition == FamilyComposition.SINGLE, familyUnitInPayForDecember == true)
     then
         insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.WINTER));
 end
