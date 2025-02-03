@@ -4,11 +4,15 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.neslihantrpc.engine.RulesEngine;
 import org.neslihantrpc.engine.RulesEngineFactory;
+import org.neslihantrpc.enums.Supplement;
+import org.neslihantrpc.model.SummerSupplementEligibilityInput;
+import org.neslihantrpc.model.SupplementEligibilityInput;
+import org.neslihantrpc.model.SupplementEligibilityOutput;
 import org.neslihantrpc.model.WinterSupplementEligibilityInput;
-import org.neslihantrpc.model.WinterSupplementEligibilityOutput;
 import org.neslihantrpc.util.JsonHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,15 +24,29 @@ public class MqttClientHandler implements AutoCloseable{
     private final String clientId;
     private final String inputTopic;
     private final String outputTopic;
-    private final RulesEngineFactory factory;
+    private final String appType;
+    private final RulesEngine rulesEngine;
     private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for processing
     private final Logger logger = LoggerFactory.getLogger(MqttClientHandler.class);
     public MqttClientHandler(RulesEngineFactory factory) {
         this.broker = MqttConfig.current.getBroker();
         this.clientId = MqttConfig.current.getTopicId();
-        this.inputTopic = MqttConfig.current.getInputTopic();
-        this.outputTopic = MqttConfig.current.getOutputTopic();
-        this.factory = factory;
+        this.appType = MqttConfig.current.getAppType();
+
+        String appType = MqttConfig.current.getAppType();
+        if ("WINTER".equals(appType)) {
+            logger.info("Winter app type selected.");
+            this.inputTopic = MqttConfig.current.getWinterInputTopic();
+            this.outputTopic = MqttConfig.current.getWinterOutputTopic();
+            this.rulesEngine = factory.create(Supplement.WINTER);
+        } else if ("SUMMER".equals(appType)) {
+            logger.info("Summer app type selected.");
+            this.inputTopic = MqttConfig.current.getSummerInputTopic();
+            this.outputTopic = MqttConfig.current.getSummerOutputTopic();
+            this.rulesEngine = factory.create(Supplement.SUMMER);
+        } else {
+            throw new IllegalArgumentException("Unknown app type: " + appType);
+        }
     }
     /**
      * Starts the MQTT client, connecting to the broker and subscribing to the input topic.
@@ -73,12 +91,19 @@ public class MqttClientHandler implements AutoCloseable{
                     logger.info("Reconnected successfully.");
                 }
                 String payload = new String(message.getPayload());
-                WinterSupplementEligibilityInput input = JsonHandler.fromJson(payload, WinterSupplementEligibilityInput.class);
-                logger.info("Processing input");
+                logger.info("Processing message: {} from topic: {}", payload, topic);
+                SupplementEligibilityInput input;
 
-                RulesEngine rulesEngine = factory.create();
-                WinterSupplementEligibilityOutput output = rulesEngine.process(input);
+                if (appType.equals("WINTER")) {
+                    input = JsonHandler.fromJson(payload, WinterSupplementEligibilityInput.class);
+                } else if (appType.equals("SUMMER")) {
+                    input = JsonHandler.fromJson(payload, SummerSupplementEligibilityInput.class);
+                } else {
+                    throw new IllegalArgumentException("Unknown app type: " + appType);
+                }
+                logger.info("Processing input" + input.toString());
 
+                SupplementEligibilityOutput output = rulesEngine.process(input);
                 if (output != null) {
                     mqttClient.publish(outputTopic, output.getJson());
                     logger.info("Output published to topic: {}", outputTopic);

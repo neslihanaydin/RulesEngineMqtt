@@ -15,8 +15,6 @@ public class Main {
         MqttClientHandler mqttClientHandler = new MqttClientHandler(rulesEngineFactory);
         try {
             mqttClientHandler.start();
-            logger.info("Application started successfully.");
-
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 mqttClientHandler.stop();
                 logger.info("Shutdown hook triggered. MQTT client stopped.");

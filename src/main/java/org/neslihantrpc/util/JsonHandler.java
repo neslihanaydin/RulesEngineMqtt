@@ -1,11 +1,15 @@
 package org.neslihantrpc.util;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import org.neslihantrpc.enums.FamilyComposition;
 
 public class JsonHandler {
 
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(FamilyComposition.class, new FamilyCompositionDeserializer())
+            .create();
 
     private JsonHandler() {
         throw new IllegalStateException("Utility class");

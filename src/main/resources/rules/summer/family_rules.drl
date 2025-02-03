@@ -1,0 +1,21 @@
+package rules.summer;
+
+import org.neslihantrpc.model.SummerSupplementEligibilityInput;
+import org.neslihantrpc.model.SupplementEligibilityOutput;
+import org.neslihantrpc.enums.FamilyComposition;
+import org.neslihantrpc.util.SupplementRuleUtils;
+import org.neslihantrpc.enums.Supplement;
+
+
+rule "Childless Couple WITH a Household Income Less Than or Equal to $80,000 - Summer"
+    when
+        $input : SummerSupplementEligibilityInput(numberOfChildren == 0 , familyComposition == FamilyComposition.MARRIED, familyUnitInPayForJuly == true, householdIncome <= 80000)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.SUMMER));
+end
+rule "Either Single Or Two Parent Family With Dependent Children AND a Household Income Less Than or Equal to $90000 - Summer"
+    when
+        $input : SummerSupplementEligibilityInput(numberOfChildren > 0 ,familyUnitInPayForJuly == true, householdIncome <= 90000)
+    then
+        insert(SupplementRuleUtils.createEligibilityOutput($input, Supplement.SUMMER));
+end
