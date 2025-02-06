@@ -4,11 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import org.neslihantrpc.enums.FamilyComposition;
+import org.neslihantrpc.model.SummerSupplementEligibilityInput;
+import org.neslihantrpc.model.WinterSupplementEligibilityInput;
 
 public class JsonHandler {
 
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(FamilyComposition.class, new FamilyCompositionDeserializer())
+            .registerTypeAdapter(SummerSupplementEligibilityInput.class, new SummerSupplementEligibilityInputDeserializer())
+            .registerTypeAdapter(WinterSupplementEligibilityInput.class, new WinterSupplementEligibilityInputDeserializer())
             .create();
 
     private JsonHandler() {

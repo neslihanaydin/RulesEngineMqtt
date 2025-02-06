@@ -14,6 +14,12 @@ public class SupplementEligibilityInput {
             String id,
             Integer numberOfChildren,
             FamilyComposition familyComposition) {
+        if (id == null || numberOfChildren == null || familyComposition == null) {
+            throw new NullPointerException("Fields cannot be null.");
+        }
+        if (id.isEmpty() || id.isBlank()) {
+            throw new IllegalArgumentException("ID cannot be empty.");
+        }
         if (numberOfChildren < 0) {
             throw new IllegalArgumentException("Number of children cannot be less than 0.");
         }
