@@ -1,5 +1,11 @@
 # Winter Supplement Rules Engine
 
+## Notice
+
+This project is currently under development for new features. The README will be updated accordingly. Please refer to the [open issue](https://github.com/neslihanaydin/RulesEngineMqtt/issues/2) for details on the ongoing development related to this feature.
+
+---
+
 Winter Supplement is an additional benefit provided to recipients of certain assistance programs to help cover extra expenses during the winter holiday season. This application determines the eligibility of clients for the Winter Supplement and calculates the eligible amount based on business rules.
 
 This repository contains a rules engine integrated with MQTT to process eligibility inputs for winter supplement eligibility. It connects to an MQTT broker, listens for messages on a specified topic, processes those messages using business rules, and then publishes the output to a designated output topic.
