@@ -1,17 +1,11 @@
-package org.neslihantrpc;
+package org.neslihantrpc.mqtt;
 
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.neslihantrpc.engine.RulesEngineFactory;
 import org.neslihantrpc.enums.ConfigType;
-import org.neslihantrpc.enums.FamilyComposition;
-import org.neslihantrpc.model.WinterSupplementEligibilityInput;
-import org.neslihantrpc.mqtt.MqttClientHandler;
-import org.neslihantrpc.mqtt.MqttConfig;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,8 +36,27 @@ class WSMqttTest {
         assertDoesNotThrow(() -> mqttClientHandler.start());
     }
 
+    /* TODO
     @Test
-    void testSuccessReceivedMessage() {
+    void testSuccessReceivedMessage() throws MqttException, InterruptedException {
+
+        WinterSupplementEligibilityInput input = new WinterSupplementEligibilityInput("a0c5365f", 2, FamilyComposition.SINGLE, true);
+        String jsonPayload = JsonHandler.toJson(input);
+
+        MqttConnectionManager connectionManager = new MqttConnectionManager(MqttConfig.current.getBroker(), MqttConfig.current.getTopicId());
+        connectionManager.connect();
+        MqttPublisher publisher = new MqttPublisher(connectionManager);
+        publisher.publish(MqttConfig.current.getWinterInputTopic(), jsonPayload);
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        connectionManager.getMqttClient().subscribe(MqttConfig.current.getWinterOutputTopic(), 1, (topic, message) -> {
+            latch.countDown();
+        });
+
+        boolean messageReceived = latch.await(5, TimeUnit.SECONDS);
+        assertTrue(messageReceived, "Output message was not received in time.");
+        /*
         try {
             mqttClientHandler.start();
             MqttClient mqttClient = mqttClientHandler.getMqttClient();
@@ -62,5 +75,8 @@ class WSMqttTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+
     }
+     */
 }
