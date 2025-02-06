@@ -9,32 +9,16 @@ import org.slf4j.LoggerFactory;
 
 public class WinterRulesEngine implements RulesEngine{
 
-    private final KieContainer kieContainer;
+    private final KieSessionManager kieSessionManager;
     private final Logger logger = LoggerFactory.getLogger(WinterRulesEngine.class);
 
     public WinterRulesEngine(KieContainer kieContainer) {
-        this.kieContainer = kieContainer;
+        this.kieSessionManager = new KieSessionManager(kieContainer);
     }
 
     @Override
     public SupplementEligibilityOutput process(SupplementEligibilityInput input) {
         logger.info("Processing winter rules...");
-        KieSession kieSession = kieContainer.newKieSession();
-
-        try {
-            kieSession.getObjects().forEach(obj -> kieSession.delete(kieSession.getFactHandle(obj)));
-            kieSession.insert(input);
-            kieSession.fireAllRules();
-            return kieSession.getObjects().stream()
-                    .filter(obj -> obj instanceof SupplementEligibilityOutput)
-                    .peek(obj -> logger.info("Winter Supplement Eligibility Output is -> \n{}", obj))
-                    .map(obj -> (SupplementEligibilityOutput) obj)
-                    .findFirst()
-                    .orElseThrow(() -> new NullPointerException("No SupplementEligibilityOutput found"));
-        } catch (Exception e ) {
-            throw new NullPointerException("Error processing rules: " + e.getMessage());
-        } finally {
-            kieSession.dispose();
-        }
+        return kieSessionManager.executeRules(input);
     }
 }

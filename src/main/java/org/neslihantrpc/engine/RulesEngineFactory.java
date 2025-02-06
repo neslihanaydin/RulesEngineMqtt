@@ -41,12 +41,10 @@ public class RulesEngineFactory {
 
     public RulesEngine create(Supplement supplement) {
         try {
-            if (supplement == Supplement.WINTER) {
-                return new WinterRulesEngine(winterKieContainer);
-            } else if (supplement == Supplement.SUMMER) {
-                return new SummerRulesEngine(summerKieContainer);
-            } else {
-                throw new IllegalArgumentException("Unknown supplement type: " + supplement);
+            switch (supplement) {
+                case WINTER: return new WinterRulesEngine(winterKieContainer);
+                case SUMMER: return new SummerRulesEngine(summerKieContainer);
+                default: throw new IllegalArgumentException("Unknown supplement type: " + supplement);
             }
         } catch (Exception e) {
             logger.error("Error creating RulesEngine: {}", e.getMessage());

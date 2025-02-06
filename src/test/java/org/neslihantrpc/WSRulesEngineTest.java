@@ -91,7 +91,7 @@ public class WSRulesEngineTest {
 
     @Test
     void testWithInvalidRuleFile() {
-        String invalidPath = "invalid.drl";
+        String invalidPath = "invalid.drl/";
         assertThrows(RuntimeException.class, () -> new RulesEngineFactory(invalidPath));
     }
 }
