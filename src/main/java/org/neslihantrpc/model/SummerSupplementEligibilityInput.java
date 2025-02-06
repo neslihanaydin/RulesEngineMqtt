@@ -5,8 +5,8 @@ import org.neslihantrpc.enums.FamilyComposition;
 import org.neslihantrpc.util.JsonHandler;
 
 public class SummerSupplementEligibilityInput extends SupplementEligibilityInput {
-    private Boolean familyUnitInPayForJuly;
-    private Float householdIncome;
+    private final Boolean familyUnitInPayForJuly;
+    private final Float householdIncome;
 
     public SummerSupplementEligibilityInput(String id,
                                             Integer numberOfChildren,
@@ -14,6 +14,9 @@ public class SummerSupplementEligibilityInput extends SupplementEligibilityInput
                                             Float householdIncome,
                                             Boolean familyUnitInPayForJuly) {
         super(id, numberOfChildren, familyComposition);
+        if (householdIncome == null || familyUnitInPayForJuly == null) {
+            throw new NullPointerException("Fields cannot be null.");
+        }
         if (householdIncome < 0) {
             throw new IllegalArgumentException("Household income cannot be less than 0.");
         }
