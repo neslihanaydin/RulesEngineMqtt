@@ -7,13 +7,11 @@ import java.lang.reflect.Type;
 
 public class FamilyCompositionDeserializer implements JsonDeserializer<FamilyComposition> {
     @Override
-    public FamilyComposition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
-        String value = json.getAsString().toUpperCase(); // Convert input to uppercase
+    public FamilyComposition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         try {
-            return FamilyComposition.valueOf(value);
+            return FamilyComposition.fromString(json.getAsString());
         } catch (IllegalArgumentException e) {
-            throw new JsonParseException("Invalid FamilyComposition value: " + value);
+            throw new JsonParseException("Invalid FamilyComposition value: " + json.getAsString());
         }
     }
 }

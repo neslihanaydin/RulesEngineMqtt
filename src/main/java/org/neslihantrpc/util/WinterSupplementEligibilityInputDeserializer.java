@@ -22,7 +22,10 @@ public class WinterSupplementEligibilityInputDeserializer implements JsonDeseria
 
         String id = jsonObject.get("id").getAsString();
         int numberOfChildren = jsonObject.get("numberOfChildren").getAsInt();
-        FamilyComposition familyComposition = FamilyComposition.valueOf(jsonObject.get("familyComposition").getAsString());
+
+        JsonElement familyCompositionElement = jsonObject.get("familyComposition");
+        FamilyComposition familyComposition = jsonDeserializationContext.deserialize(familyCompositionElement, FamilyComposition.class);
+
         boolean familyUnitInPayForDecember = jsonObject.get("familyUnitInPayForDecember").getAsBoolean();
 
         return new WinterSupplementEligibilityInput(id, numberOfChildren, familyComposition, familyUnitInPayForDecember);

@@ -23,7 +23,10 @@ public class SummerSupplementEligibilityInputDeserializer implements JsonDeseria
 
         String id = jsonObject.get("id").getAsString();
         int numberOfChildren = jsonObject.get("numberOfChildren").getAsInt();
-        FamilyComposition familyComposition = FamilyComposition.valueOf(jsonObject.get("familyComposition").getAsString());
+
+        JsonElement familyCompositionElement = jsonObject.get("familyComposition");
+        FamilyComposition familyComposition = jsonDeserializationContext.deserialize(familyCompositionElement, FamilyComposition.class);
+
         Float householdIncome = jsonObject.get("householdIncome").getAsFloat();
         boolean familyUnitInPayForJuly = jsonObject.get("familyUnitInPayForJuly").getAsBoolean();
 

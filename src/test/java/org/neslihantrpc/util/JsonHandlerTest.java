@@ -26,7 +26,7 @@ public class JsonHandlerTest {
     @Test
     public void testFromJson() {
         // Create a JSON string
-        String json = "{\"id\":\"1\",\"numberOfChildren\":2,\"familyComposition\":\"SINGLE\",\"householdIncome\":5000.0,\"familyUnitInPayForJuly\":true}";
+        String json = "{\"id\":\"1\",\"numberOfChildren\":2,\"familyComposition\":\"single\",\"householdIncome\":5000.0,\"familyUnitInPayForJuly\":true}";
 
         SummerSupplementEligibilityInput input = JsonHandler.fromJson(json, SummerSupplementEligibilityInput.class);
 
