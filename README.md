@@ -1,14 +1,8 @@
-# Winter Supplement Rules Engine
+# MQTT-Integrated Rule Processing System 
 
-## Notice
+Supplement system is an additional benefit provided to recipients of certain assistance programs to help cover extra expenses during the holiday seasons. This application determines the eligibility of clients for the Winter Supplement or Summer Supplement and calculates the eligible amount based on business rules.
 
-This project is currently under development for new features. The README will be updated accordingly. Please refer to the [open issue](https://github.com/neslihanaydin/RulesEngineMqtt/issues/2) for details on the ongoing development related to this feature.
-
----
-
-Winter Supplement is an additional benefit provided to recipients of certain assistance programs to help cover extra expenses during the winter holiday season. This application determines the eligibility of clients for the Winter Supplement and calculates the eligible amount based on business rules.
-
-This repository contains a rules engine integrated with MQTT to process eligibility inputs for winter supplement eligibility. It connects to an MQTT broker, listens for messages on a specified topic, processes those messages using business rules, and then publishes the output to a designated output topic.
+This repository contains a rules engine integrated with MQTT to process eligibility inputs for seasonal supplement eligibility. It connects to an MQTT broker, listens for messages on a specified topic, processes those messages using business rules, and then publishes the output to a designated output topic.
 
 ### Table below is the rule that is used to calculate the Winter Supplement:
 
@@ -18,9 +12,18 @@ This repository contains a rules engine integrated with MQTT to process eligibil
 | Childless couple | $120 per calendar year |
 | Either a single- or two-parent family with dependent children | $120 per calendar year plus $20 for each dependent child |
 
+
+### Table below is the rule that is used to calculate the Summer Supplement:
+
+| Eligibility | Eligible for payment in July |
+|----------------------|--------|
+| A single person with no dependent children and a household income of less than or equal to $50,000 per year | $150 per calendar year |
+| A childless couple with a household income of less than or equal to $80,000 per year | $250 per calendar year |
+| A single-parent or two-parent family with dependent children and a household income of less than or equal to $90,000 per year | $100 per calendar year plus $50 for each dependent child |
+
 ## Foreword
 
-The rules engine must work with the provided Winter Supplement Calculator, which gives an MQTT topic ID for integrating the rule engine with the web application. While MQTT topic IDs and topics were used successfully for subscription and publishing operations on the console, interaction with the provided website could not be established. Due to unforeseen issues, it was not possible to discuss the details of this problem, and therefore, the test connection was performed on the console instead.
+The rules engine must work with the provided Seasonal Supplement App, which hosted on [Rules Engine App](https://rules-engine-app.vercel.app/). However, for the application to function properly, the project in this repository must be running.
 
 ## Set Up the Development Environment
 
@@ -36,9 +39,11 @@ Update the configuration to point to your local MQTT broker. Edit the `src/main/
 
 ```properties
 mqtt.broker=tcp://localhost:1883
-mqtt.topic.id=test-topic-id
-mqtt.input.topic=input-topic/
-mqtt.output.topic=output-topic/
+mqtt.topic.id=1234
+mqtt.winter.input.topic=test/winterInput
+mqtt.winter.output.topic=test/winterOutput
+mqtt.summer.input.topic=test/summerInput
+mqtt.summer.output.topic=test/summerOutput
 rules.file.path=src/main/resources/rules/
 ```
 For example, replace `test-topic-id` with the appropriate MQTT topic ID for your local setup.
@@ -107,13 +112,13 @@ mvn exec:java
 This command will start the application. Once the application is successfully started, you will see logs like the following, showing the MQTT topic the application is subscribed to:
 ```bash
 2024-12-02 16:56:13 INFO  o.n.mqtt.MqttClientHandler - Connected to MQTT broker.
-2024-12-02 16:56:14 INFO  o.n.mqtt.MqttClientHandler - Subscribed to topic: BRE/calculateWinterSupplementInput/af3054e0-27ff-428e-9531-72b88106039c
+2024-12-02 16:56:14 INFO  o.n.mqtt.MqttClientHandler - Subscribed to topic: RulesEngine/winterSupplementInput/72b88106039c
 2024-12-02 16:56:14 INFO  org.neslihantrpc.Main - Application started successfully.
 ```
 ### 3. Publish a Message to the MQTT Topic
 The application will listen for messages on the subscribed MQTT topic and process them accordingly. To publish a message, use <b>Mosquitto</b>. Run the following command to send a message to the MQTT broker:
 ```bash
-mosquitto_pub -h test.mosquitto.org -t "BRE/calculateWinterSupplementInput/af3054e0-27ff-428e-9531-72b88106039c" -m '{"id":"a0c5365f","numberOfChildren":2,"familyComposition":"Single","familyUnitInPayForDecember":true}'
+mosquitto_pub -h test.mosquitto.org -t "RulesEngine/winterSupplementInput/72b88106039c" -m '{"id":"a0c5365f","numberOfChildren":2,"familyComposition":"Single","familyUnitInPayForDecember":true}'
 ```
 ### 4. Check the Output
 Once the message is published, the application will process the message and output the result. You will see logs similar to the following:
@@ -121,14 +126,23 @@ Once the message is published, the application will process the message and outp
 2024-12-02 17:00:01 INFO  o.n.mqtt.MqttClientHandler - Processing input
 2024-12-02 17:00:01 INFO  o.n.engine.RulesEngineFactory - Creating a new RulesEngine instance.
 2024-12-02 17:00:01 INFO  org.neslihantrpc.engine.RulesEngine - WinterSupplementEligibilityOutput is -> WinterSupplementEligibilityOutput{id='a0c5365f', isEligible=true, baseAmount=120.0, childrenAmount=40.0, supplementAmount=160.0}
-2024-12-02 17:00:02 INFO  o.n.mqtt.MqttClientHandler - Output published to topic: BRE/calculateWinterSupplementOutput/af3054e0-27ff-428e-9531-72b88106039c
+2024-12-02 17:00:02 INFO  o.n.mqtt.MqttClientHandler - Output published to topic: RulesEngine/winterSupplementOutput/72b88106039c
 2024-12-02 17:00:02 INFO  o.n.mqtt.MqttClientHandler - Message delivery complete: true
 ```
+
+### MQTT topics for Winter Supplement:
+Input: RulesEngine/winterSupplementInput/
+Output: RulesEngine/winterSupplementOutput/
+
+### MQTT topics for Summer Supplement:
+Input: RulesEngine/summerSupplementInput/
+Output: RulesEngine/summerSupplementOutput/
+
 ## Data Formats
 
 The application processes input data and generates output data based on specific JSON schemas. Ensure that the data conforms to the formats described below for proper functionality.
 
-### Input Data Format
+### Input Data Format for Winter Supplement
 The input data must adhere to the following JSON schema:
 ```json
 {
@@ -151,7 +165,9 @@ Example Input:
 * numberOfChildren: The number of children in the family.
 * familyComposition: The type of family, either single or couple.
 * familyUnitInPayForDecember: Must be true for eligibility.
-### Output Data Format
+  
+### Output Data Format for Winter Supplement
+
 The application generates output data in the following JSON schema:
 ```json
 {
@@ -174,6 +190,62 @@ Example Output:
 ```
 * id: ID from input
 * isEligible: Eligibility, equal to "familyUnitInPayForDecember"
+* baseAmount: Base amount calculated from family composition.
+* childrenAmount: Additional amount calculated based on the number of children.
+* supplementAmount: The total supplement amount, summing baseAmount and childrenAmount.
+
+### Input Data Format for Summer Supplement
+
+The input data must adhere to the following JSON schema:
+```json
+{
+   "id": "str",
+  "numberOfChildren": "int",
+  "familyComposition": "str",
+  "householdIncome": "float",
+  "familyUnitInPayForJuly": "bool"
+}
+```
+Example Input:
+```json
+{
+  "id": "a0c5365f",
+  "numberOfChildren": 2,
+  "familyComposition": "single",
+  "householdIncome": "85000.0",
+  "familyUnitInPayForJuly": true
+}
+```
+* id: A unique identifier that ensures traceability between input and output data.
+* numberOfChildren: The number of children in the family.
+* familyComposition: The type of family, either single or couple.
+* householdIncome: The amount of the family's annual income.
+* familyUnitInPayForJuly: Must be true for eligibility.
+
+### Output Data Format for Summer Supplement
+
+The application generates output data in the following JSON schema:
+```json
+{
+  "id": "str",
+  "isEligible": "bool",
+  "baseAmount": "float",
+  "childrenAmount": "float",
+  "supplementAmount": "float"
+}
+```
+Example Output:
+```json
+{
+  "id": "a0c5365f",
+  "isEligible": true,
+  "baseAmount": 100.0,
+  "childrenAmount": 100.0,
+  "supplementAmount": 200.0
+}
+```
+* id: ID from input
+* isEligible: Eligibility, equal to "familyUnitInPayForJuly"
 * baseAmount: Base amount calculated from family composition.
 * childrenAmount: Additional amount calculated based on the number of children.
 * supplementAmount: The total supplement amount, summing baseAmount and childrenAmount.
