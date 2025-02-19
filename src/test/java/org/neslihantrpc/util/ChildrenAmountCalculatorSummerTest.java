@@ -34,33 +34,4 @@ public class ChildrenAmountCalculatorSummerTest {
     void testCalculateChildrenAmount(String testName, SummerSupplementEligibilityInput input, float expectedAmount) {
         assertEquals(expectedAmount, ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), input.getFamilyUnitInPayForJuly(), Supplement.SUMMER));
     }
-
-    /*
-    @Test
-    void testCalculateChildrenAmount_ReturnsZero_WhenNotEligible() {
-        // Not eligible
-        SummerSupplementEligibilityInput input = createInput("1", 1, FamilyComposition.SINGLE, false);
-        assertEquals(0F, ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), input.getFamilyUnitInPayForDecember(), Supplement.WINTER));
-    }
-
-    @Test
-    void testCalculateChildrenAmount_ReturnsZero_WhenNumberOfChildrenIsNull() {
-        // Not eligible
-        SummerSupplementEligibilityInput input = createInput("1", 1, FamilyComposition.SINGLE, false);
-        assertEquals(0F, ChildrenAmountCalculator.calculate(null, input.getFamilyUnitInPayForDecember(), Supplement.WINTER));
-    }
-
-    @Test
-    void testCalculateChildrenAmount_ReturnsZero_WhenFamilyUnitInPayIsNull() {
-        // Not eligible
-        SummerSupplementEligibilityInput input = createInput("1", 1, FamilyComposition.SINGLE, false);
-        assertEquals(0F, ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), null, Supplement.WINTER));
-    }
-
-    @Test
-    void testCalculateChildrenAmount_Returns0_WithoutChildren() {
-        SummerSupplementEligibilityInput input = createInput("1", 0, FamilyComposition.SINGLE, true);
-        assertEquals(0F, ChildrenAmountCalculator.calculate(input.getNumberOfChildren(), input.getFamilyUnitInPayForDecember(), Supplement.WINTER));
-    }
-     */
 }

@@ -1,7 +1,6 @@
 package org.neslihantrpc.engine;
 
 import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
 import org.neslihantrpc.model.SupplementEligibilityInput;
 import org.neslihantrpc.model.SupplementEligibilityOutput;
 import org.slf4j.Logger;

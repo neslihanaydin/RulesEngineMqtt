@@ -2,7 +2,6 @@ package org.neslihantrpc.util;
 
 import org.neslihantrpc.enums.Supplement;
 import org.neslihantrpc.model.SummerSupplementEligibilityInput;
-import org.neslihantrpc.model.SupplementEligibilityInput;
 import org.neslihantrpc.model.SupplementEligibilityOutput;
 import org.neslihantrpc.model.WinterSupplementEligibilityInput;
 

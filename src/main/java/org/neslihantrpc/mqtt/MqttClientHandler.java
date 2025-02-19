@@ -1,9 +1,7 @@
 package org.neslihantrpc.mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
-import org.neslihantrpc.engine.RulesEngine;
 import org.neslihantrpc.engine.RulesEngineFactory;
-import org.neslihantrpc.enums.Supplement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,33 +13,15 @@ public class MqttClientHandler {
 
     private final MqttConnectionManager connectionManager;
     private final MessageHandler messageHandler;
-    private final String inputTopic;
     private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for processing
     private final Logger logger = LoggerFactory.getLogger(MqttClientHandler.class);
     public MqttClientHandler(RulesEngineFactory factory) {
         String broker = MqttConfig.current.getBroker();
         String clientId = MqttConfig.current.getTopicId();
-        String appType = MqttConfig.current.getAppType();
-        String outputTopic;
-        RulesEngine rulesEngine;
-
-        if ("WINTER".equals(appType)) {
-            logger.info("Winter app type selected.");
-            inputTopic = MqttConfig.current.getWinterInputTopic();
-            outputTopic = MqttConfig.current.getWinterOutputTopic();
-            rulesEngine = factory.create(Supplement.WINTER);
-        } else if ("SUMMER".equals(appType)) {
-            logger.info("Summer app type selected.");
-            inputTopic = MqttConfig.current.getSummerInputTopic();
-            outputTopic = MqttConfig.current.getSummerOutputTopic();
-            rulesEngine = factory.create(Supplement.SUMMER);
-        } else {
-            throw new IllegalArgumentException("Unknown app type: " + appType);
-        }
 
         this.connectionManager = new MqttConnectionManager(broker, clientId);
         MqttPublisher publisher = new MqttPublisher(connectionManager);
-        MqttMessageProcessor processor = new MqttMessageProcessor(rulesEngine, publisher, outputTopic, appType);
+        MqttMessageProcessor processor = new MqttMessageProcessor(factory, publisher);
         this.messageHandler = new MessageHandler(processor);
     }
 
@@ -64,8 +44,13 @@ public class MqttClientHandler {
             }
         });
 
-        connectionManager.getMqttClient().subscribe(inputTopic, 1);
-        logger.info("Subscribed to topic: {}", inputTopic);
+        String summerInputTopic = MqttConfig.current.getSummerInputTopic();
+        String winterInputTopic = MqttConfig.current.getWinterInputTopic();
+        connectionManager.getMqttClient().subscribe(summerInputTopic, 1);
+        connectionManager.getMqttClient().subscribe(winterInputTopic, 1);
+
+        logger.info("Subscribed to topic: {}", summerInputTopic);
+        logger.info("Subscribed to topic: {}", winterInputTopic);
     }
 
     /**

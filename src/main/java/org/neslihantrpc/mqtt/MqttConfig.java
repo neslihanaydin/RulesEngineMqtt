@@ -87,8 +87,4 @@ public class MqttConfig {
     public String getRulesFilePath() {
         return getProperty("rules.file.path");
     }
-
-    public String getAppType() {
-        return getProperty("app.type");
-    }
 }
