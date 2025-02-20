@@ -31,14 +31,14 @@ public class MqttMessageProcessor {
             RulesEngine rulesEngine;
             String outputTopic;
 
-            if (topic.contains("Winter")) {
+            if (topic.contains("winter")) {
                 input = JsonHandler.fromJson(payload, WinterSupplementEligibilityInput.class);
                 rulesEngine = winterRulesEngine;
-                outputTopic = "BRE/calculateWinterSupplementOutput/af3054e0-27ff-428e-9531-72b88106039c";
-            } else if (topic.contains("Summer")) {
+                outputTopic = MqttConfig.current.getWinterOutputTopic();
+            } else if (topic.contains("summer")) {
                 input = JsonHandler.fromJson(payload, SummerSupplementEligibilityInput.class);
                 rulesEngine = summerRulesEngine;
-                outputTopic = "BRE/calculateSummerSupplementOutput/af3054e0-27ff-428e-9531-72b88106039c";
+                outputTopic = MqttConfig.current.getSummerOutputTopic();
             } else {
                 throw new IllegalArgumentException("Unknown app type: " + topic);
             }

@@ -11,7 +11,7 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        RulesEngineFactory rulesEngineFactory = new RulesEngineFactory(MqttConfig.current.getRulesFilePath());
+        RulesEngineFactory rulesEngineFactory = new RulesEngineFactory();
         MqttClientHandler mqttClientHandler = new MqttClientHandler(rulesEngineFactory);
         try {
             mqttClientHandler.start();

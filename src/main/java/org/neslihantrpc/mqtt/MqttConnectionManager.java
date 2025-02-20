@@ -42,6 +42,10 @@ public class MqttConnectionManager {
         }
     }
 
+    public boolean isConnected() {
+        return mqttClient != null && mqttClient.isConnected();
+    }
+
     public MqttClient getMqttClient() {
         return mqttClient;
     }

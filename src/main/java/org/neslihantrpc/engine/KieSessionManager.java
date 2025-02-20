@@ -9,14 +9,16 @@ import org.slf4j.LoggerFactory;
 
 public class KieSessionManager {
     private final KieContainer kieContainer;
+    private final String sessionName;
     private final Logger logger = LoggerFactory.getLogger(KieSessionManager.class);
 
-    public KieSessionManager(KieContainer kieContainer) {
+    public KieSessionManager(KieContainer kieContainer, String sessionName) {
         this.kieContainer = kieContainer;
+        this.sessionName = sessionName;
     }
 
     public SupplementEligibilityOutput executeRules(SupplementEligibilityInput input) {
-        KieSession kieSession = kieContainer.newKieSession();
+        KieSession kieSession = kieContainer.newKieSession(sessionName);
         try {
             kieSession.getObjects().forEach(obj -> kieSession.delete(kieSession.getFactHandle(obj)));
             kieSession.insert(input);

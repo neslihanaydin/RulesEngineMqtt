@@ -19,7 +19,7 @@ public class WSRulesEngineTest {
     @BeforeEach
     public void setup() {
         MqttConfig.current.setEnvironment(ConfigType.TEST);
-        RulesEngineFactory factory = new RulesEngineFactory(MqttConfig.current.getRulesFilePath());
+        RulesEngineFactory factory = new RulesEngineFactory();
         engine = factory.create(Supplement.WINTER);
     }
 
@@ -87,11 +87,5 @@ public class WSRulesEngineTest {
     @Test
     void testEligibilityWithNullInput() {
         assertThrows(NullPointerException.class, () -> engine.process(null));
-    }
-
-    @Test
-    void testWithInvalidRuleFile() {
-        String invalidPath = "invalid.drl/";
-        assertThrows(RuntimeException.class, () -> new RulesEngineFactory(invalidPath));
     }
 }

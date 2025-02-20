@@ -13,7 +13,7 @@ public class SummerRulesEngine implements RulesEngine{
 
 
     public SummerRulesEngine(KieContainer kieContainer) {
-        this.kieSessionManager = new KieSessionManager(kieContainer);
+        this.kieSessionManager = new KieSessionManager(kieContainer, "summer-session");
     }
     
     @Override

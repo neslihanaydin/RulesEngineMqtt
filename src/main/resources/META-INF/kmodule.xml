@@ -1,6 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns="http://www.drools.org/xsd/kmodule">
-    <kbase name="rules" packages="rules">
-        <ksession name="test-rules"/>
+    <kbase name="winter-rules" packages="rules.winter">
+        <ksession name="winter-session"/>
+    </kbase>
+    <kbase name="summer-rules" packages="rules.summer">
+        <ksession name="summer-session"/>
     </kbase>
 </kmodule>

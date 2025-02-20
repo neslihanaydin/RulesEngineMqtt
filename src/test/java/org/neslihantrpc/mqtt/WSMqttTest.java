@@ -16,7 +16,7 @@ class WSMqttTest {
     @BeforeEach
     void setup() {
         MqttConfig.current.setEnvironment(ConfigType.TEST);
-        RulesEngineFactory rulesEngineFactory = new RulesEngineFactory(MqttConfig.current.getRulesFilePath());
+        RulesEngineFactory rulesEngineFactory = new RulesEngineFactory();
         mqttClientHandler = new MqttClientHandler(rulesEngineFactory);
     }
 

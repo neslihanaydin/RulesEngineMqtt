@@ -13,7 +13,7 @@ public class WinterRulesEngine implements RulesEngine{
     private final Logger logger = LoggerFactory.getLogger(WinterRulesEngine.class);
 
     public WinterRulesEngine(KieContainer kieContainer) {
-        this.kieSessionManager = new KieSessionManager(kieContainer);
+        this.kieSessionManager = new KieSessionManager(kieContainer, "winter-session");
     }
 
     @Override

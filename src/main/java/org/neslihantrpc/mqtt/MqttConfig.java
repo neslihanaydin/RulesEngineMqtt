@@ -84,7 +84,4 @@ public class MqttConfig {
         return getProperty("mqtt.summer.output.topic") + getTopicId();
     }
 
-    public String getRulesFilePath() {
-        return getProperty("rules.file.path");
-    }
 }
