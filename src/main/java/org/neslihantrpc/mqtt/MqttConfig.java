@@ -69,19 +69,19 @@ public class MqttConfig {
     }
 
     public String getWinterInputTopic() {
-        return getProperty("mqtt.winter.input.topic") + getTopicId();
+        return getProperty("mqtt.winter.input.topic");
     }
 
     public String getWinterOutputTopic() {
-        return getProperty("mqtt.winter.output.topic") + getTopicId();
+        return getProperty("mqtt.winter.output.topic");
     }
 
     public String getSummerInputTopic() {
-        return getProperty("mqtt.summer.input.topic") + getTopicId();
+        return getProperty("mqtt.summer.input.topic");
     }
 
     public String getSummerOutputTopic() {
-        return getProperty("mqtt.summer.output.topic") + getTopicId();
+        return getProperty("mqtt.summer.output.topic");
     }
 
 }
