@@ -124,13 +124,13 @@ Ensure that Docker is installed and running on your machine.
 #### 1. Pull the Docker Image
 Download the Docker image from DockerHub using the following command:
 ```bash
-docker pull naydin43/wsrulesengine:1.0
+docker pull naydin43/wsrulesengine:latest
 ```
 
 #### 2. Run the container
 Start the application by running the Docker container with this command:
 ```bash
-docker run -p 8080:8080 --name mqtt-rules-engine naydin43/wsrulesengine:1.0
+docker run -p 8080:8080 --name mqtt-rules-engine naydin43/wsrulesengine:latest
 ```
 
 #### 3. Access the Application
