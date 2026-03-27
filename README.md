@@ -1,6 +1,9 @@
 # MQTT-Integrated Rule Processing System 
 
+An event-driven, decoupled backend service that evaluates complex business rules for seasonal supplement eligibility in real-time.
+
 This repository contains a rules engine integrated with MQTT to process eligibility inputs for seasonal supplement eligibility. It connects to an MQTT broker, listens for messages on a specified topic, processes those messages using business rules, and then publishes the output to a designated output topic.
+
 
 ## Table of Contents
 - [Overview](#overview)
@@ -30,6 +33,29 @@ This repository contains a rules engine integrated with MQTT to process eligibil
 ## Overview  
 
 The Supplement system is a benefit provided to help recipients cover extra expenses during holiday seasons. This application determines client eligibility for the Winter or Summer Supplement and calculates the eligible amount based on business rules.  
+
+
+## 🚀 Engineering Vision & Architecture
+
+Unlike traditional synchronous REST APIs, this system is built on an **Event-Driven Architecture** using **MQTT**. This design choice ensures high throughput, asynchronous processing, and loose coupling between the client-facing web application and the backend logic.
+
+By integrating **JBoss Drools** as the core rules engine, the application strictly decouples business logic from the Java codebase. This allows for dynamic updates to eligibility rules without requiring application recompilation, ensuring high maintainability and scalability.
+
+### 🛠️ Tech Stack & Key Decisions
+* **Java 17 & Maven:** Core backend development and dependency management.
+* **MQTT (Mosquitto):** Chosen for lightweight, real-time message brokering and asynchronous communication.
+* **JBoss Drools:** Implemented to externalize and evaluate complex decision matrices (Business Rules).
+* **Docker:** Containerized for consistent deployment across local and cloud environments.
+* **JUnit:** Ensuring robust test coverage for rule evaluation and message handling.
+
+### 🔄 System Data Flow
+1. **Trigger:** The [Seasonal Supplement App](https://rules-engine-app.vercel.app/) publishes a JSON payload to the MQTT `RulesEngine/...Input/` topic.
+2. **Consume:** This Java application acts as an MQTT subscriber, listening to the topic and intercepting the payload.
+3. **Evaluate:** The payload is mapped to Java Objects and fed into the **Drools Engine**, which evaluates the data against the `.drl` business rules.
+4. **Publish:** The application calculates the supplement amount and publishes the final result to the MQTT `RulesEngine/...Output/` topic.
+5. **Resolve:** The frontend consumes the output topic and displays the result to the user in real-time.
+
+---
 
 ## Foreword  
 
